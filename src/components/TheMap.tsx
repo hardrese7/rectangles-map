@@ -9,7 +9,7 @@ const DEFAULT_MAP_SETTINGS = {
   zoom: 2,
 };
 
-function TheMap() {
+function TheMap(): JSX.Element {
   const [, setMap] = useState<mapboxgl.Map | null>(null);
   const mapContainerRef = useRef(null);
   useEffect(() => {
@@ -17,7 +17,7 @@ function TheMap() {
       return;
     }
     const map = new mapboxgl.Map({
-      container: mapContainerRef.current! as HTMLElement,
+      container: mapContainerRef?.current ?? '',
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [DEFAULT_MAP_SETTINGS.lng, DEFAULT_MAP_SETTINGS.lat],
       zoom: DEFAULT_MAP_SETTINGS.zoom,
