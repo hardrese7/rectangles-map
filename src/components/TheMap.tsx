@@ -30,6 +30,14 @@ const rectangles: IRectangle[] = [
     yaw_angle: 30,
     color: '#fff',
   },
+  {
+    center_lat: DEFAULT_MAP_SETTINGS.lat + 0.001,
+    center_lng: DEFAULT_MAP_SETTINGS.lng,
+    length: 100,
+    width: 100 * Math.sqrt(3),
+    yaw_angle: 30,
+    color: '#f00',
+  },
 ];
 
 mapboxgl.accessToken =
@@ -78,19 +86,19 @@ function calculateRectangleCoordinates(rectangle: IRectangle) {
   ];
 }
 
-function drawRectangle(map: mapboxgl.Map, rectangle: IRectangle) {
+function drawRectangle(map: mapboxgl.Map, rectangle: IRectangle, id: string) {
   const rectCoords = calculateRectangleCoordinates(rectangle);
   const poly = polygon([rectCoords]);
   const options = { pivot: [rectangle.center_lng, rectangle.center_lat] };
   const rotatedPoly = transformRotate(poly, rectangle.yaw_angle, options);
-  map.addSource('maine', {
+  map.addSource(id, {
     type: 'geojson',
     data: rotatedPoly,
   });
   map.addLayer({
-    id: 'maine',
+    id,
     type: 'fill',
-    source: 'maine',
+    source: id,
     layout: {},
     paint: {
       'fill-color': rectangle.color,
@@ -113,7 +121,8 @@ function TheMap(): JSX.Element {
     });
     map.on('load', () => {
       // TODO check and mark collisions
-      rectangles.forEach((r) => drawRectangle(map, r));
+      // TODO generate ids by nanoid
+      rectangles.forEach((r, i) => drawRectangle(map, r, `rect${i}`));
     });
     setMap(map);
     // TODO clear memory
