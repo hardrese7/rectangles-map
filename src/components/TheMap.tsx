@@ -1,27 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
-import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
-import transformRotate from '@turf/transform-rotate';
-import { polygon } from '@turf/helpers';
-
-// TODO move to config
-const DEFAULT_MAP_SETTINGS = {
-  lng: -122.486052,
-  lat: 37.830348,
-  zoom: 15,
-};
+import Rectangle from '../models/Rectangle'; // TODO implement absolute imports
+import { DEFAULT_MAP_SETTINGS, MAPBOX_KEY } from '../utils/config'; // TODO implement absolute imports
 
 // TODO move interface to the special folder
-interface IRectangle {
-  center_lat: number;
-  center_lng: number;
-  length: number;
-  width: number;
-  yaw_angle: number;
-  color: string;
-}
 // TODO load rectangles from a file
-const rectangles: IRectangle[] = [
+const rectangles = [
   {
     center_lat: DEFAULT_MAP_SETTINGS.lat,
     center_lng: DEFAULT_MAP_SETTINGS.lng,
@@ -38,62 +22,14 @@ const rectangles: IRectangle[] = [
     yaw_angle: 30,
     color: '#f00',
   },
-];
+].map((r) => new Rectangle(r));
 
-mapboxgl.accessToken =
-  'pk.eyJ1IjoiaGFyZHJlc2U3IiwiYSI6ImNranNxc2h2OTA2ZTgyeXFzZmY5N3R0Z2gifQ.tkKZnAhtf0ZlA3lhD6j-cg'; // TODO move to config
+mapboxgl.accessToken = MAPBOX_KEY;
 
-function calcAngle(opposite: number, adjacent: number): number {
-  return (Math.atan(opposite / adjacent) * 180) / Math.PI;
-}
-
-// TODO refactor and make more clear
-function calculateRectangleCoordinates(rectangle: IRectangle) {
-  const halfLength = rectangle.length / 2;
-  const halfWidth = rectangle.width / 2;
-  const angle = calcAngle(halfWidth, halfLength);
-  const rectCenter = {
-    latitude: rectangle.center_lat,
-    longitude: rectangle.center_lng,
-  };
-  const distanceToAngle = Math.hypot(halfWidth, halfLength);
-  const topLeftAngle = computeDestinationPoint(
-    rectCenter,
-    distanceToAngle,
-    360 - (90 - angle),
-  );
-  const topRightAngle = computeDestinationPoint(
-    rectCenter,
-    distanceToAngle,
-    90 - angle,
-  );
-  const bottomRightAngle = computeDestinationPoint(
-    rectCenter,
-    distanceToAngle,
-    90 + angle,
-  );
-  const bottomLeftAngle = computeDestinationPoint(
-    rectCenter,
-    distanceToAngle,
-    180 + (90 - angle),
-  );
-  return [
-    [topLeftAngle.longitude, topLeftAngle.latitude],
-    [topRightAngle.longitude, topRightAngle.latitude],
-    [bottomRightAngle.longitude, bottomRightAngle.latitude],
-    [bottomLeftAngle.longitude, bottomLeftAngle.latitude],
-    [topLeftAngle.longitude, topLeftAngle.latitude],
-  ];
-}
-
-function drawRectangle(map: mapboxgl.Map, rectangle: IRectangle, id: string) {
-  const rectCoords = calculateRectangleCoordinates(rectangle);
-  const poly = polygon([rectCoords]);
-  const options = { pivot: [rectangle.center_lng, rectangle.center_lat] };
-  const rotatedPoly = transformRotate(poly, rectangle.yaw_angle, options);
+function drawRectangle(map: mapboxgl.Map, rectangle: Rectangle, id: string) {
   map.addSource(id, {
     type: 'geojson',
-    data: rotatedPoly,
+    data: rectangle.geoJSON,
   });
   map.addLayer({
     id,
@@ -101,7 +37,7 @@ function drawRectangle(map: mapboxgl.Map, rectangle: IRectangle, id: string) {
     source: id,
     layout: {},
     paint: {
-      'fill-color': rectangle.color,
+      'fill-color': rectangle.sourceData.color,
     },
   });
 }
