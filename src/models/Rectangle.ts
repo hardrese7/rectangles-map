@@ -10,9 +10,12 @@ function calcAngle(opposite: number, adjacent: number): number {
 export default class Rectangle {
   readonly sourceData: ISourceRectangle;
 
-  readonly geoJSON: GeoJSON.Feature<GeoJSON.Geometry>;
+  readonly geoJSON: GeoJSON.Feature<GeoJSON.Polygon, GeoJSON.GeoJsonProperties>;
+
+  hasCollision: boolean;
 
   constructor(rectangle: ISourceRectangle) {
+    this.hasCollision = false;
     this.sourceData = rectangle;
     this.geoJSON = this.getRotatedRectangle(
       this.calculateRectangleCoordinates(),
@@ -21,7 +24,7 @@ export default class Rectangle {
 
   getRotatedRectangle(
     rectangleCoordinates: Position[],
-  ): GeoJSON.Feature<GeoJSON.Geometry> {
+  ): GeoJSON.Feature<GeoJSON.Polygon, GeoJSON.GeoJsonProperties> {
     const poly = polygon([rectangleCoordinates]);
     const options = {
       pivot: [this.sourceData.center_lng, this.sourceData.center_lat],

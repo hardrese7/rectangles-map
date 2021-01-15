@@ -7,6 +7,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@turf/helpers": "^6.1.4",
+    "@turf/intersect": "^6.2.0",
     "@turf/transform-rotate": "^5.1.5",
     "@types/jest": "^26.0.15",
     "@types/mapbox-gl": "^2.0.2",

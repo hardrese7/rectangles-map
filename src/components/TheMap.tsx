@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import Rectangle from '../models/Rectangle'; // TODO implement absolute imports
 import { DEFAULT_MAP_SETTINGS, MAPBOX_KEY } from '../utils/config'; // TODO implement absolute imports
+import findCollisionsAndRemember from '../utils/helpers'; // TODO implement absolute imports
 
 // TODO move interface to the special folder
 // TODO load rectangles from a file
@@ -16,6 +17,14 @@ const rectangles = [
   },
   {
     center_lat: DEFAULT_MAP_SETTINGS.lat + 0.001,
+    center_lng: DEFAULT_MAP_SETTINGS.lng,
+    length: 100,
+    width: 100 * Math.sqrt(3),
+    yaw_angle: 30,
+    color: '#f00',
+  },
+  {
+    center_lat: DEFAULT_MAP_SETTINGS.lat + 0.003,
     center_lng: DEFAULT_MAP_SETTINGS.lng,
     length: 100,
     width: 100 * Math.sqrt(3),
@@ -40,6 +49,23 @@ function drawRectangle(map: mapboxgl.Map, rectangle: Rectangle, id: string) {
       'fill-color': rectangle.sourceData.color,
     },
   });
+  if (rectangle.hasCollision) {
+    map.addLayer({
+      id: `line_${id}`,
+      type: 'line',
+      source: id,
+      layout: {
+        'line-cap': 'square',
+        'line-join': 'miter',
+      },
+      paint: {
+        'line-color': '#f00',
+        'line-width': 4,
+        'line-offset': -3,
+        'line-dasharray': [1, 1],
+      },
+    });
+  }
 }
 
 function TheMap(): JSX.Element {
@@ -56,8 +82,8 @@ function TheMap(): JSX.Element {
       zoom: DEFAULT_MAP_SETTINGS.zoom,
     });
     map.on('load', () => {
-      // TODO check and mark collisions
       // TODO generate ids by nanoid
+      findCollisionsAndRemember(rectangles);
       rectangles.forEach((r, i) => drawRectangle(map, r, `rect${i}`));
     });
     setMap(map);
