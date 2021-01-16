@@ -1,10 +1,7 @@
 import intersect from '@turf/intersect';
 import Rectangle from 'Models/Rectangle';
 
-/* eslint-disable no-param-reassign */
-export default function findCollisionsAndRemember(
-  rectangles: Rectangle[],
-): GeoJSON.FeatureCollection {
+export function findCollisionsAndRemember(rectangles: Rectangle[]): void {
   for (let i = 0; i < rectangles.length - 1; i += 1) {
     for (let j = i + 1; j < rectangles.length; j += 1) {
       const hasCollision = !!intersect(
@@ -12,21 +9,18 @@ export default function findCollisionsAndRemember(
         rectangles[j].geoJSON,
       );
       if (hasCollision) {
-        if (!rectangles[i].geoJSON.properties) {
-          rectangles[i].geoJSON.properties = {};
-        }
-        // TODO refactor
-        rectangles[i].geoJSON.properties!.hasCollision = true;
-        if (!rectangles[j].geoJSON.properties) {
-          rectangles[j].geoJSON.properties = {};
-        }
-        rectangles[j].geoJSON.properties!.hasCollision = true;
+        rectangles[i].setCollision(true);
+        rectangles[j].setCollision(true);
       }
     }
   }
+}
+
+export function generateFeatureCollection(
+  rectangles: Rectangle[],
+): GeoJSON.FeatureCollection {
   return {
     type: 'FeatureCollection',
     features: rectangles.map((r) => r.geoJSON),
   };
 }
-/* eslint-enable no-param-reassign */

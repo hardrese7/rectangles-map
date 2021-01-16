@@ -9,7 +9,10 @@ import {
   MAP_FILL_LAYER_ID,
   MAP_COLLISION_LAYER_ID,
 } from 'Utils/config';
-import findCollisionsAndRemember from 'Utils/helpers';
+import {
+  findCollisionsAndRemember,
+  generateFeatureCollection,
+} from 'Utils/helpers';
 import LoadJSONButton from './LoadJSONButton';
 
 mapboxgl.accessToken = MAPBOX_KEY;
@@ -96,9 +99,8 @@ function TheMap(): JSX.Element {
   // Render the rectangles and adjust zoom
   useEffect(() => {
     if (map && rectangles.length) {
-      const featureCollection: GeoJSON.FeatureCollection = findCollisionsAndRemember(
-        rectangles,
-      );
+      findCollisionsAndRemember(rectangles);
+      const featureCollection = generateFeatureCollection(rectangles);
       drawRectangles(map, featureCollection);
       adjustZoom(map, featureCollection);
     }
