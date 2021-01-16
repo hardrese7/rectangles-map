@@ -81,21 +81,21 @@ function TheMap(): JSX.Element {
 
   // Init the map instance
   useEffect(() => {
-    let mapInstance: mapboxgl.Map | null;
-    if (mapContainerRef && !map) {
-      mapInstance = new mapboxgl.Map({
+    if (mapContainerRef && (!map || !map.loaded())) {
+      const mapInstance = new mapboxgl.Map({
         container: mapContainerRef?.current ?? '',
         style: 'mapbox://styles/mapbox/streets-v11',
       });
-      setMap(mapInstance);
+      mapInstance.on('load', () => {
+        setMap(mapInstance);
+      });
     }
     return () => {
-      map?.remove();
-      setMap(null);
+      if (map && map.loaded()) {
+        map.remove();
+      }
     };
-    // It's necessary to init the map only once, so let's disable linter rule react-hooks/exhaustive-deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [map]);
 
   // Render the rectangles and adjust zoom
   useEffect(() => {
@@ -106,14 +106,17 @@ function TheMap(): JSX.Element {
       adjustZoom(map, featureCollection);
     }
     return () => {
-      if (map?.getLayer(MAP_FILL_LAYER_ID)) {
-        map?.removeLayer(MAP_FILL_LAYER_ID);
+      if (!map || !map.loaded()) {
+        return;
       }
-      if (map?.getLayer(MAP_COLLISION_LAYER_ID)) {
-        map?.removeLayer(MAP_COLLISION_LAYER_ID);
+      if (map.getLayer(MAP_FILL_LAYER_ID)) {
+        map.removeLayer(MAP_FILL_LAYER_ID);
       }
-      if (map?.getSource(MAP_SOURCE_ID)) {
-        map?.removeSource(MAP_SOURCE_ID);
+      if (map.getLayer(MAP_COLLISION_LAYER_ID)) {
+        map.removeLayer(MAP_COLLISION_LAYER_ID);
+      }
+      if (map.getSource(MAP_SOURCE_ID)) {
+        map.removeSource(MAP_SOURCE_ID);
       }
     };
   }, [map, rectangles]);
