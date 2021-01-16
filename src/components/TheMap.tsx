@@ -26,15 +26,7 @@ function drawRectangles(
     type: 'geojson',
     data: featureCollection,
   });
-  map.addLayer({
-    id: MAP_FILL_LAYER_ID,
-    type: 'fill',
-    source: MAP_SOURCE_ID,
-    layout: {},
-    paint: {
-      'fill-color': ['get', 'color'],
-    },
-  });
+
   map.addLayer({
     id: MAP_COLLISION_LAYER_ID,
     type: 'line',
@@ -53,6 +45,17 @@ function drawRectangles(
       'line-width': 4,
       'line-offset': -3,
       'line-dasharray': [1, 1],
+    },
+  });
+
+  map.addLayer({
+    id: MAP_FILL_LAYER_ID,
+    type: 'fill',
+    source: MAP_SOURCE_ID,
+    layout: {},
+    paint: {
+      'fill-color': ['get', 'color'],
+      'fill-outline-color': 'transparent',
     },
   });
 }
