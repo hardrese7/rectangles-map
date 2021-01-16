@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
+import bbox from '@turf/bbox';
 import Rectangle from '../models/Rectangle'; // TODO implement absolute imports
-import { DEFAULT_MAP_SETTINGS, MAPBOX_KEY } from '../utils/config'; // TODO implement absolute imports
+import { MAPBOX_KEY } from '../utils/config'; // TODO implement absolute imports
 import findCollisionsAndRemember from '../utils/helpers'; // TODO implement absolute imports
 import LoadJSONButton from './LoadJSONButton';
 import ISourceRectangle from '../models/ISourceRectangle'; // TODO implement absolute imports
@@ -41,6 +42,20 @@ function drawRectangle(map: mapboxgl.Map, rectangle: Rectangle, id: string) {
   }
 }
 
+function adjustZoom(
+  map: mapboxgl.Map,
+  featureCollection: GeoJSON.FeatureCollection,
+) {
+  const bounds = bbox(featureCollection);
+  map.fitBounds(
+    new mapboxgl.LngLatBounds([bounds[0], bounds[1]], [bounds[2], bounds[3]]),
+    {
+      padding: 10,
+      duration: 1000,
+    },
+  );
+}
+
 function TheMap(): JSX.Element {
   const [rectangles, setRectangles] = useState<Rectangle[]>([]);
   const [, setMap] = useState<mapboxgl.Map | null>(null);
@@ -55,13 +70,23 @@ function TheMap(): JSX.Element {
     const map = new mapboxgl.Map({
       container: mapContainerRef?.current ?? '',
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [DEFAULT_MAP_SETTINGS.lng, DEFAULT_MAP_SETTINGS.lat],
-      zoom: DEFAULT_MAP_SETTINGS.zoom,
     });
+    // TODO research may be there is an ability to not reload the map on the rectangles loading
     map.on('load', () => {
-      // TODO generate ids by nanoid
+      if (!rectangles.length) {
+        return;
+      }
       findCollisionsAndRemember(rectangles);
-      rectangles.forEach((r, i) => drawRectangle(map, r, `rect${i}`));
+      const featureCollection: GeoJSON.FeatureCollection = {
+        type: 'FeatureCollection',
+        features: [],
+      };
+      rectangles.forEach((r, i) => {
+        featureCollection.features.push(r.geoJSON);
+        // TODO generate ids by nanoid
+        drawRectangle(map, r, `rect${i}`);
+      });
+      adjustZoom(map, featureCollection);
     });
     setMap(map);
     // TODO clear memory

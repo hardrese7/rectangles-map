@@ -1655,6 +1655,14 @@
   dependencies:
     "@babel/runtime" "^7.12.5"
 
+"@turf/bbox@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@turf/bbox/-/bbox-6.2.0.tgz#ae75ab6b111478863dd34c4e63dbb36e613e6854"
+  integrity sha512-8KR//ruA/hhCvDiBzxBTUJ/G3hm9+tuCyeZA81hvdsooDpeq0PK/jSJjlwYjS//UK5c2deBeNNJx7NvL/PLEwg==
+  dependencies:
+    "@turf/helpers" "^6.2.0"
+    "@turf/meta" "^6.2.0"
+
 "@turf/centroid@^5.1.5":
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/@turf/centroid/-/centroid-5.1.5.tgz#778ada74216335021ad8fd0e7a65a8349d53c769"
@@ -1714,6 +1722,13 @@
   integrity sha1-OxrUhe4MOwsXdRMqMsOE1T5LpT0=
   dependencies:
     "@turf/helpers" "^5.1.5"
+
+"@turf/meta@^6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@turf/meta/-/meta-6.2.0.tgz#a225477fd8b5a4166d98e2e70cc4ed843db0f48d"
+  integrity sha512-8bM69hzRYKNfpZ+cyLxXZLw1IqCxm3cBcyEkVBHROFsQJb1o1Ghv2cd4iCSIuvkc1xSWD+qQvUjYr40XSNsyOQ==
+  dependencies:
+    "@turf/helpers" "^6.2.0"
 
 "@turf/rhumb-bearing@^5.1.5":
   version "5.1.5"
