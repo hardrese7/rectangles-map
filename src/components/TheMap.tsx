@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import bbox from '@turf/bbox';
-import Rectangle from '../models/Rectangle'; // TODO implement absolute imports
-import { MAPBOX_KEY } from '../utils/config'; // TODO implement absolute imports
-import findCollisionsAndRemember from '../utils/helpers'; // TODO implement absolute imports
+import Rectangle from 'Models/Rectangle';
+import ISourceRectangle from 'Models/ISourceRectangle';
+import { MAPBOX_KEY } from 'Utils/config';
+import findCollisionsAndRemember from 'Utils/helpers';
 import LoadJSONButton from './LoadJSONButton';
-import ISourceRectangle from '../models/ISourceRectangle'; // TODO implement absolute imports
 
 mapboxgl.accessToken = MAPBOX_KEY;
 

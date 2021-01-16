@@ -1,6 +1,6 @@
 import React from 'react';
+import TheMap from 'Components/TheMap';
 import './App.css';
-import TheMap from './components/TheMap';
 
 function App(): JSX.Element {
   return (

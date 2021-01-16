@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import ISourceRectangle from '../models/ISourceRectangle'; // TODO implement absolute imports
+import ISourceRectangle from 'Models/ISourceRectangle';
 
 type OnJSONLoadCallback = (data: ISourceRectangle[]) => void;
 

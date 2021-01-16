@@ -1,5 +1,5 @@
 import intersect from '@turf/intersect';
-import Rectangle from '../models/Rectangle'; // TODO implement absolute imports
+import Rectangle from 'Models/Rectangle';
 
 /* eslint-disable no-param-reassign */
 export default function findCollisionsAndRemember(
