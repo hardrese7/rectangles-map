@@ -8,6 +8,7 @@ import {
   MAP_SOURCE_ID,
   MAP_FILL_LAYER_ID,
   MAP_COLLISION_LAYER_ID,
+  HAS_COLLISION_PROPERTY_NAME,
 } from 'Utils/config';
 import {
   findCollisionsAndRemember,
@@ -45,7 +46,7 @@ function drawRectangles(
     paint: {
       'line-color': [
         'case',
-        ['boolean', ['has', 'hasCollision'], true],
+        ['boolean', ['has', HAS_COLLISION_PROPERTY_NAME], true],
         '#f00',
         'transparent',
       ],

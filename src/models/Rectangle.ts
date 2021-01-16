@@ -1,6 +1,7 @@
 import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
 import transformRotate from '@turf/transform-rotate';
 import { polygon, Position } from '@turf/helpers';
+import { HAS_COLLISION_PROPERTY_NAME } from 'Utils/config';
 import ISourceRectangle from './ISourceRectangle';
 
 function calcAngle(opposite: number, adjacent: number): number {
@@ -34,7 +35,7 @@ export default class Rectangle {
     if (!this.geoJSON.properties) {
       this.geoJSON.properties = {};
     }
-    this.geoJSON.properties.hasCollision = value;
+    this.geoJSON.properties[HAS_COLLISION_PROPERTY_NAME] = value;
   }
 
   // TODO refactor and make more clear

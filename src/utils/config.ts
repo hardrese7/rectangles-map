@@ -10,3 +10,4 @@ export const MAPBOX_KEY =
 export const MAP_SOURCE_ID = 'rectangles';
 export const MAP_COLLISION_LAYER_ID = `${MAP_SOURCE_ID}_collision`;
 export const MAP_FILL_LAYER_ID = `${MAP_SOURCE_ID}_fill`;
+export const HAS_COLLISION_PROPERTY_NAME = 'hasCollision';
