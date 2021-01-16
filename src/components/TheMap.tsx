@@ -9,10 +9,14 @@ import ISourceRectangle from '../models/ISourceRectangle'; // TODO implement abs
 
 mapboxgl.accessToken = MAPBOX_KEY;
 
-function drawRectangle(map: mapboxgl.Map, rectangle: Rectangle, id: string) {
+function drawRectangles(
+  map: mapboxgl.Map,
+  featureCollection: GeoJSON.FeatureCollection,
+) {
+  const id = 'rectangles';
   map.addSource(id, {
     type: 'geojson',
-    data: rectangle.geoJSON,
+    data: featureCollection,
   });
   map.addLayer({
     id,
@@ -20,26 +24,29 @@ function drawRectangle(map: mapboxgl.Map, rectangle: Rectangle, id: string) {
     source: id,
     layout: {},
     paint: {
-      'fill-color': rectangle.sourceData.color,
+      'fill-color': ['get', 'color'],
     },
   });
-  if (rectangle.hasCollision) {
-    map.addLayer({
-      id: `line_${id}`,
-      type: 'line',
-      source: id,
-      layout: {
-        'line-cap': 'square',
-        'line-join': 'miter',
-      },
-      paint: {
-        'line-color': '#f00',
-        'line-width': 4,
-        'line-offset': -3,
-        'line-dasharray': [1, 1],
-      },
-    });
-  }
+  map.addLayer({
+    id: `line_${id}`,
+    type: 'line',
+    source: id,
+    layout: {
+      'line-cap': 'square',
+      'line-join': 'miter',
+    },
+    paint: {
+      'line-color': [
+        'case',
+        ['boolean', ['has', 'hasCollision'], true],
+        '#f00',
+        'transparent',
+      ],
+      'line-width': 4,
+      'line-offset': -3,
+      'line-dasharray': [1, 1],
+    },
+  });
 }
 
 function adjustZoom(
@@ -64,6 +71,7 @@ function TheMap(): JSX.Element {
     setRectangles(newRectangles.map((r) => new Rectangle(r)));
   };
   useEffect(() => {
+    // TODO implement spinner or disable button
     if (!mapContainerRef) {
       return;
     }
@@ -76,16 +84,10 @@ function TheMap(): JSX.Element {
       if (!rectangles.length) {
         return;
       }
-      findCollisionsAndRemember(rectangles);
-      const featureCollection: GeoJSON.FeatureCollection = {
-        type: 'FeatureCollection',
-        features: [],
-      };
-      rectangles.forEach((r, i) => {
-        featureCollection.features.push(r.geoJSON);
-        // TODO generate ids by nanoid
-        drawRectangle(map, r, `rect${i}`);
-      });
+      const featureCollection: GeoJSON.FeatureCollection = findCollisionsAndRemember(
+        rectangles,
+      );
+      drawRectangles(map, featureCollection);
       adjustZoom(map, featureCollection);
     });
     setMap(map);

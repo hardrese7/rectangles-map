@@ -20,6 +20,7 @@ export default class Rectangle {
     this.geoJSON = this.getRotatedRectangle(
       this.calculateRectangleCoordinates(),
     );
+    this.geoJSON.properties = { color: this.sourceData.color };
   }
 
   getRotatedRectangle(
