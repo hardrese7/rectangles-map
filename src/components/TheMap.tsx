@@ -3,7 +3,12 @@ import mapboxgl from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import Rectangle from 'Models/Rectangle';
 import ISourceRectangle from 'Models/ISourceRectangle';
-import { MAPBOX_KEY } from 'Utils/config';
+import {
+  MAPBOX_KEY,
+  MAP_SOURCE_ID,
+  MAP_FILL_LAYER_ID,
+  MAP_COLLISION_LAYER_ID,
+} from 'Utils/config';
 import findCollisionsAndRemember from 'Utils/helpers';
 import LoadJSONButton from './LoadJSONButton';
 
@@ -13,24 +18,23 @@ function drawRectangles(
   map: mapboxgl.Map,
   featureCollection: GeoJSON.FeatureCollection,
 ) {
-  const id = 'rectangles';
-  map.addSource(id, {
+  map.addSource(MAP_SOURCE_ID, {
     type: 'geojson',
     data: featureCollection,
   });
   map.addLayer({
-    id,
+    id: MAP_FILL_LAYER_ID,
     type: 'fill',
-    source: id,
+    source: MAP_SOURCE_ID,
     layout: {},
     paint: {
       'fill-color': ['get', 'color'],
     },
   });
   map.addLayer({
-    id: `line_${id}`,
+    id: MAP_COLLISION_LAYER_ID,
     type: 'line',
-    source: id,
+    source: MAP_SOURCE_ID,
     layout: {
       'line-cap': 'square',
       'line-join': 'miter',
@@ -65,34 +69,52 @@ function adjustZoom(
 
 function TheMap(): JSX.Element {
   const [rectangles, setRectangles] = useState<Rectangle[]>([]);
-  const [, setMap] = useState<mapboxgl.Map | null>(null);
+  const [map, setMap] = useState<mapboxgl.Map | null>(null);
   const mapContainerRef = useRef(null);
   const updateRectangles = (newRectangles: ISourceRectangle[]) => {
     setRectangles(newRectangles.map((r) => new Rectangle(r)));
   };
+
+  // Init the map instance
   useEffect(() => {
-    // TODO implement spinner or disable button
-    if (!mapContainerRef) {
-      return;
+    let mapInstance: mapboxgl.Map | null;
+    if (mapContainerRef && !map) {
+      mapInstance = new mapboxgl.Map({
+        container: mapContainerRef?.current ?? '',
+        style: 'mapbox://styles/mapbox/streets-v11',
+      });
+      setMap(mapInstance);
     }
-    const map = new mapboxgl.Map({
-      container: mapContainerRef?.current ?? '',
-      style: 'mapbox://styles/mapbox/streets-v11',
-    });
-    // TODO research may be there is an ability to not reload the map on the rectangles loading
-    map.on('load', () => {
-      if (!rectangles.length) {
-        return;
-      }
+    return () => {
+      map?.remove();
+      setMap(null);
+    };
+    // It's necessary to init the map only once, so let's disable linter rule react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Render the rectangles and adjust zoom
+  useEffect(() => {
+    if (map && rectangles.length) {
       const featureCollection: GeoJSON.FeatureCollection = findCollisionsAndRemember(
         rectangles,
       );
       drawRectangles(map, featureCollection);
       adjustZoom(map, featureCollection);
-    });
-    setMap(map);
-    // TODO clear memory
-  }, [mapContainerRef, rectangles]);
+    }
+    return () => {
+      if (map?.getLayer(MAP_FILL_LAYER_ID)) {
+        map?.removeLayer(MAP_FILL_LAYER_ID);
+      }
+      if (map?.getLayer(MAP_COLLISION_LAYER_ID)) {
+        map?.removeLayer(MAP_COLLISION_LAYER_ID);
+      }
+      if (map?.getSource(MAP_SOURCE_ID)) {
+        map?.removeSource(MAP_SOURCE_ID);
+      }
+    };
+  }, [map, rectangles]);
+
   return (
     <div>
       <div ref={mapContainerRef} className="mapContainer" />
