@@ -3,35 +3,8 @@ import mapboxgl from 'mapbox-gl';
 import Rectangle from '../models/Rectangle'; // TODO implement absolute imports
 import { DEFAULT_MAP_SETTINGS, MAPBOX_KEY } from '../utils/config'; // TODO implement absolute imports
 import findCollisionsAndRemember from '../utils/helpers'; // TODO implement absolute imports
-
-// TODO move interface to the special folder
-// TODO load rectangles from a file
-const rectangles = [
-  {
-    center_lat: DEFAULT_MAP_SETTINGS.lat,
-    center_lng: DEFAULT_MAP_SETTINGS.lng,
-    length: 100,
-    width: 100 * Math.sqrt(3),
-    yaw_angle: 30,
-    color: '#fff',
-  },
-  {
-    center_lat: DEFAULT_MAP_SETTINGS.lat + 0.001,
-    center_lng: DEFAULT_MAP_SETTINGS.lng,
-    length: 100,
-    width: 100 * Math.sqrt(3),
-    yaw_angle: 30,
-    color: '#f00',
-  },
-  {
-    center_lat: DEFAULT_MAP_SETTINGS.lat + 0.003,
-    center_lng: DEFAULT_MAP_SETTINGS.lng,
-    length: 100,
-    width: 100 * Math.sqrt(3),
-    yaw_angle: 30,
-    color: '#f00',
-  },
-].map((r) => new Rectangle(r));
+import LoadJSONButton from './LoadJSONButton';
+import ISourceRectangle from '../models/ISourceRectangle'; // TODO implement absolute imports
 
 mapboxgl.accessToken = MAPBOX_KEY;
 
@@ -69,8 +42,12 @@ function drawRectangle(map: mapboxgl.Map, rectangle: Rectangle, id: string) {
 }
 
 function TheMap(): JSX.Element {
+  const [rectangles, setRectangles] = useState<Rectangle[]>([]);
   const [, setMap] = useState<mapboxgl.Map | null>(null);
   const mapContainerRef = useRef(null);
+  const updateRectangles = (newRectangles: ISourceRectangle[]) => {
+    setRectangles(newRectangles.map((r) => new Rectangle(r)));
+  };
   useEffect(() => {
     if (!mapContainerRef) {
       return;
@@ -88,10 +65,11 @@ function TheMap(): JSX.Element {
     });
     setMap(map);
     // TODO clear memory
-  }, [mapContainerRef]);
+  }, [mapContainerRef, rectangles]);
   return (
     <div>
       <div ref={mapContainerRef} className="mapContainer" />
+      <LoadJSONButton onJSONLoad={updateRectangles} />
     </div>
   );
 }
