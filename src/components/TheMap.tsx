@@ -15,7 +15,8 @@ import {
   generateFeatureCollection,
 } from 'Utils/helpers';
 import styles from './TheMap.module.css';
-import LoadJSONButton from './LoadJSONButton';
+import LoaderJSON from './LoaderJSON';
+import Spinner from './Spinner';
 
 mapboxgl.accessToken = MAPBOX_KEY;
 
@@ -78,6 +79,7 @@ function adjustZoom(
 function TheMap(): JSX.Element {
   const [rectangles, setRectangles] = useState<Rectangle[]>([]);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
+  const [loading, setLoading] = useState(true);
   const mapContainerRef = useRef(null);
   const updateRectangles = (newRectangles: ISourceRectangle[]) => {
     setRectangles(newRectangles.map((r) => new Rectangle(r)));
@@ -86,12 +88,17 @@ function TheMap(): JSX.Element {
   // Init the map instance
   useEffect(() => {
     if (mapContainerRef && (!map || !map.loaded())) {
+      setLoading(true);
       const mapInstance = new mapboxgl.Map({
         container: mapContainerRef?.current ?? '',
         style: 'mapbox://styles/mapbox/streets-v11',
       });
       mapInstance.on('load', () => {
         setMap(mapInstance);
+      });
+      mapInstance.on('error', (error) => {
+        // TODO handle error
+        console.warn(error);
       });
     }
     return () => {
@@ -104,11 +111,13 @@ function TheMap(): JSX.Element {
   // Render the rectangles and adjust zoom
   useEffect(() => {
     if (map && rectangles.length) {
+      setLoading(true);
       findCollisionsAndRemember(rectangles);
       const featureCollection = generateFeatureCollection(rectangles);
       drawRectangles(map, featureCollection);
       adjustZoom(map, featureCollection);
     }
+    setLoading(false);
     return () => {
       if (!map || !map.loaded()) {
         return;
@@ -128,7 +137,13 @@ function TheMap(): JSX.Element {
   return (
     <div>
       <div ref={mapContainerRef} className={styles.mapContainer} />
-      <LoadJSONButton onJSONLoad={updateRectangles} />
+      <LoaderJSON
+        disabled={loading}
+        onSuccess={updateRectangles}
+        onError={() => setLoading(false)}
+        onLoadingStart={() => setLoading(true)}
+      />
+      {loading && <Spinner />}
     </div>
   );
 }

@@ -1,16 +1,22 @@
 import React, { useRef } from 'react';
 import ISourceRectangle from 'Models/ISourceRectangle';
-import styles from './LoadJSONButton.module.css';
+import styles from './LoaderJSON.module.css';
 
-type OnJSONLoadCallback = (data: ISourceRectangle[]) => void;
+type OnSuccessCallback = (data: ISourceRectangle[]) => void;
 
-interface ILoadJSONButtonProps {
-  onJSONLoad: OnJSONLoadCallback;
+interface ILoaderJSONEvents {
+  onSuccess: OnSuccessCallback;
+  onError: (error: string) => void;
+  onLoadingStart: () => void;
+}
+
+interface ILoaderJSONProps extends ILoaderJSONEvents {
+  disabled: boolean;
 }
 
 function onReaderLoad(
   event: ProgressEvent<FileReader>,
-  onJSONLoad: OnJSONLoadCallback,
+  events: ILoaderJSONEvents,
 ) {
   try {
     if (!event.target?.result) {
@@ -18,33 +24,43 @@ function onReaderLoad(
     }
     const rectangles = JSON.parse(event.target.result as string);
     // TODO check rectangles' array has the correct shape
-    onJSONLoad(rectangles);
+    events.onSuccess(rectangles);
   } catch {
+    const invalidJsonErrorText = 'Invalid JSON! Check the JSON format';
     // TODO implement the error handler
     // eslint-disable-next-line no-alert
-    alert('Invalid JSON! Check the JSON format');
+    alert(invalidJsonErrorText);
+    events.onError(invalidJsonErrorText);
   }
 }
 
 function readFile(
   event: React.ChangeEvent<HTMLInputElement>,
-  onJSONLoad: OnJSONLoadCallback,
+  events: ILoaderJSONEvents,
 ) {
   const reader = new FileReader();
-  reader.onload = (e) => onReaderLoad(e, onJSONLoad);
+  reader.onload = (e) => onReaderLoad(e, events);
   if (!event.target?.files?.length) {
+    const noFileErrorText = 'You should to choose one correct JSON file';
     // eslint-disable-next-line no-alert
-    alert('You should to choose one correct JSON file');
+    alert(noFileErrorText);
+    events.onError(noFileErrorText);
     return;
   }
   reader.readAsText(event.target.files[0]);
 }
 
-function LoadJSONButton({ onJSONLoad }: ILoadJSONButtonProps): JSX.Element {
+function LoaderJSON({
+  onLoadingStart,
+  onError,
+  onSuccess,
+  disabled,
+}: ILoaderJSONProps): JSX.Element {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const readFileAndResetInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    readFile(e, onJSONLoad);
+    onLoadingStart();
+    readFile(e, { onSuccess, onError, onLoadingStart });
     if (inputFileRef.current) {
       inputFileRef.current.value = '';
     }
@@ -59,9 +75,14 @@ function LoadJSONButton({ onJSONLoad }: ILoadJSONButtonProps): JSX.Element {
         ref={inputFileRef}
         hidden
       />
-      <input onClick={openFileDialog} type="button" value="Load JSON" />
+      <input
+        disabled={disabled}
+        onClick={openFileDialog}
+        type="button"
+        value="Load JSON"
+      />
     </div>
   );
 }
 
-export default LoadJSONButton;
+export default LoaderJSON;
