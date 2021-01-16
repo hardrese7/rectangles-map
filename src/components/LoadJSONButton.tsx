@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import ISourceRectangle from 'Models/ISourceRectangle';
+import styles from './LoadJSONButton.module.css';
 
 type OnJSONLoadCallback = (data: ISourceRectangle[]) => void;
 
@@ -50,9 +51,8 @@ function LoadJSONButton({ onJSONLoad }: ILoadJSONButtonProps): JSX.Element {
   };
 
   const openFileDialog = () => inputFileRef.current?.click();
-  // TODO get rid of inline styles
   return (
-    <div style={{ position: 'fixed' }}>
+    <div className={styles.buttonsContainer}>
       <input
         onChange={readFileAndResetInput}
         type="file"

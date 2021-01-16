@@ -14,6 +14,7 @@ import {
   findCollisionsAndRemember,
   generateFeatureCollection,
 } from 'Utils/helpers';
+import styles from './TheMap.module.css';
 import LoadJSONButton from './LoadJSONButton';
 
 mapboxgl.accessToken = MAPBOX_KEY;
@@ -126,7 +127,7 @@ function TheMap(): JSX.Element {
 
   return (
     <div>
-      <div ref={mapContainerRef} className="mapContainer" />
+      <div ref={mapContainerRef} className={styles.mapContainer} />
       <LoadJSONButton onJSONLoad={updateRectangles} />
     </div>
   );
