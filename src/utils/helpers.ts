@@ -24,3 +24,15 @@ export function generateFeatureCollection(
     features: rectangles.map((r) => r.geoJSON),
   };
 }
+
+/**
+ * Returns the angle in degrees between the opposite and adjacent sides
+ * @param opposite The opposite side length
+ * @param adjacent The adjacent side length
+ */
+export function calculateRightTriangleAngle(
+  opposite: number,
+  adjacent: number,
+): number {
+  return (Math.atan(opposite / adjacent) * 180) / Math.PI;
+}
