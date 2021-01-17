@@ -6,15 +6,17 @@ export function validateObjectPropertyIsNumber<T>(
 ): boolean {
   const num = obj[propertyName];
   if (typeof num !== 'number') {
-    throw Error(`${propertyName} must be of type number but was ${typeof num}`);
+    throw TypeError(
+      `${propertyName} must be of type number but was ${typeof num}`,
+    );
   }
   if (max && num > max) {
-    throw Error(
+    throw RangeError(
       `${propertyName} must be less or equal to ${max} but was ${num}`,
     );
   }
   if (min && num < min) {
-    throw Error(
+    throw RangeError(
       `${propertyName} must be less or equal to ${min} but was ${num}`,
     );
   }
@@ -27,7 +29,7 @@ export function validateObjectPropertyIsColor<T>(
 ): boolean {
   const color = obj[propertyName];
   if (typeof color !== 'string') {
-    throw Error(
+    throw TypeError(
       `${propertyName} must be of type number but was ${typeof color}`,
     );
   }
