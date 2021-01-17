@@ -98,6 +98,7 @@ function TheMap(): JSX.Element {
       });
       mapInstance.on('error', (error) => {
         // TODO handle error
+        // eslint-disable-next-line no-console
         console.warn(error);
       });
     }
