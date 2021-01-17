@@ -1,4 +1,5 @@
 # Rectangles Map
+
 ## Task description (in Russian)
 есть набор объектов-прямоугольников, заданных в виде `{center_lat, center_lng, length, width, yaw_angle, color}`. Он сериализован в JSON. Максимальное расстояние между парой объектов - 2 км, максимальная длина/ширина - 100 м. Необходимо сделать одностраничное приложение (только фронт), которое отображает карту и позволяет загрузить JSON с объектами. После загрузки карта должна автоматом отмасштабироваться так, чтобы все объекты поместились, и объекты должны отрисоваться на ней в виде прямоугольников соответствующего цвета. Если какие-либо два (или более) объектов накладываются друг на друга (частично или полностью), обвести их жирной красной рамкой. Инструменты - ReactJS, mapbox/leaflet, TypeScript или ES6+ (первое более предпочтительно)
 
@@ -12,47 +13,25 @@ The last app version from master is always deployed [here](https://rectangles-ma
 
 ![](rectangles-map-demo.gif)
 
+## Project setup and run
+1. Clone the project
+1. Open project root in terminal
+1. Install dependencies with yarn: `yarn`
+1. Run the application in the development mode: `yarn start`
+1. Open [http://localhost:3000](http://localhost:3000) to view it in the browser
+1. Or build the project for the production: `yarn build`
 
-# Getting Started with Create React App
+## Project TODOs
+1. Show errors with toasts, instead of alerts
+1. Implement unit-tests
+1. Implement e2e tests
+1. Fix todos in the code
+1. Check different browsers and devices support(now it was tested only in Chrome/MacOS)
+
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
 ## Learn More
 
