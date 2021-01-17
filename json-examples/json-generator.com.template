@@ -1,0 +1,11 @@
+[
+  '{{repeat(1000, 1000)}}',
+  {
+    "center_lat":'{{floating(37.235, 38.236)}}',
+    "center_lng":'{{floating(-122.235, -123.236)}}',
+    "length":'{{floating(100, 100)}}',
+    "width":'{{floating(100, 100)}}',
+    "yaw_angle":'{{integer(0, 359)}}',
+    "color":'{{random("#fff", "#f00", "#0f0", "#00f")}}'
+  }
+]

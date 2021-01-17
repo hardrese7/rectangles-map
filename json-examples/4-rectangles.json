@@ -1,0 +1,42 @@
+[
+  {
+    "center_lat": 37.230,
+    "center_lng": -123.2305,
+    "length": 100,
+    "width": 100,
+    "yaw_angle": 192,
+    "color": "#fff"
+  },
+  {
+    "center_lat": 37.236,
+    "center_lng": -123.2306,
+    "length": 100,
+    "width": 100,
+    "yaw_angle": 219,
+    "color": "#f00"
+  },
+  {
+    "center_lat": 37.237,
+    "center_lng": -123.2307,
+    "length": 100,
+    "width": 100,
+    "yaw_angle": 263,
+    "color": "#fff"
+  },
+  {
+    "center_lat": 37.238,
+    "center_lng": -123.2308,
+    "length": 100,
+    "width": 100,
+    "yaw_angle": 301,
+    "color": "#fff"
+  },
+  {
+    "center_lat": 37.239,
+    "center_lng": -123.2309,
+    "length": 100,
+    "width": 100,
+    "yaw_angle": 199,
+    "color": "#f00"
+  }
+]
