@@ -76,14 +76,11 @@ function adjustZoom(
   map: mapboxgl.Map,
   featureCollection: GeoJSON.FeatureCollection,
 ) {
-  const bounds = bbox(featureCollection);
-  map.fitBounds(
-    new mapboxgl.LngLatBounds([bounds[0], bounds[1]], [bounds[2], bounds[3]]),
-    {
-      padding: 10,
-      duration: 1000,
-    },
-  );
+  const [minLng, minLat, maxLng, maxLat] = bbox(featureCollection);
+  map.fitBounds(new mapboxgl.LngLatBounds([minLng, minLat], [maxLng, maxLat]), {
+    padding: 10,
+    duration: 1000,
+  });
 }
 
 function TheMap(): JSX.Element {
