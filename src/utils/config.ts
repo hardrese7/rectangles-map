@@ -1,8 +1,13 @@
-export const DEFAULT_MAP_SETTINGS = {
-  lng: -122.486052,
-  lat: 37.830348,
-  zoom: 15,
-};
+export const MIN_LATITUDE = -90;
+export const MAX_LATITUDE = 90;
+export const MIN_LONGTITUDE = -180;
+export const MAX_LONGTITUDE = 180;
+export const MIN_RECTANGLE_LENGTH = 1;
+export const MAX_RECTANGLE_LENGTH = 100;
+export const MIN_RECTANGLE_WIDTH = 1;
+export const MAX_RECTANGLE_WIDTH = 100;
+export const MIN_YAW_ANGLE = -360;
+export const MAX_YAW_ANGLE = 360;
 
 // TODO move the key from the repository to the environment variables
 export const MAPBOX_KEY =

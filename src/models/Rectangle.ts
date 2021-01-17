@@ -1,7 +1,19 @@
 import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
 import transformRotate from '@turf/transform-rotate';
 import { polygon, Position } from '@turf/helpers';
-import { HAS_COLLISION_PROPERTY_NAME } from 'src/utils/config';
+import {
+  HAS_COLLISION_PROPERTY_NAME,
+  MAX_LATITUDE,
+  MAX_LONGTITUDE,
+  MAX_RECTANGLE_LENGTH,
+  MAX_RECTANGLE_WIDTH,
+  MAX_YAW_ANGLE,
+  MIN_LATITUDE,
+  MIN_LONGTITUDE,
+  MIN_RECTANGLE_LENGTH,
+  MIN_RECTANGLE_WIDTH,
+  MIN_YAW_ANGLE,
+} from 'src/utils/config';
 import { calculateRightTriangleAngle } from 'src/utils/helpers';
 import {
   validateObjectPropertyIsColor,
@@ -30,11 +42,36 @@ export default class Rectangle {
    */
   private validateShapeOfSourceDate(): boolean {
     const obj = this.sourceData;
-    validateObjectPropertyIsNumber(obj, 'center_lat', -90, 90);
-    validateObjectPropertyIsNumber(obj, 'center_lng', -180, 180);
-    validateObjectPropertyIsNumber(obj, 'length', 1, 100);
-    validateObjectPropertyIsNumber(obj, 'width', 1, 100);
-    validateObjectPropertyIsNumber(obj, 'yaw_angle', -360, 360);
+    validateObjectPropertyIsNumber(
+      obj,
+      'center_lat',
+      MIN_LATITUDE,
+      MAX_LATITUDE,
+    );
+    validateObjectPropertyIsNumber(
+      obj,
+      'center_lng',
+      MIN_LONGTITUDE,
+      MAX_LONGTITUDE,
+    );
+    validateObjectPropertyIsNumber(
+      obj,
+      'length',
+      MIN_RECTANGLE_LENGTH,
+      MAX_RECTANGLE_LENGTH,
+    );
+    validateObjectPropertyIsNumber(
+      obj,
+      'width',
+      MIN_RECTANGLE_WIDTH,
+      MAX_RECTANGLE_WIDTH,
+    );
+    validateObjectPropertyIsNumber(
+      obj,
+      'yaw_angle',
+      MIN_YAW_ANGLE,
+      MAX_YAW_ANGLE,
+    );
     validateObjectPropertyIsColor(obj, 'color');
     return true;
   }
@@ -80,11 +117,12 @@ export default class Rectangle {
       );
       return [point.longitude, point.latitude];
     };
-
-    const topLeftPoint = computePointPosition(360 - (90 - angleInDegrees));
-    const topRightPoint = computePointPosition(90 - angleInDegrees);
-    const bottomRightPoint = computePointPosition(90 + angleInDegrees);
-    const bottomLeftPoint = computePointPosition(180 + (90 - angleInDegrees));
+    const hourAngle3h = 90;
+    const hourAngle9h = 270;
+    const topLeftPoint = computePointPosition(hourAngle9h + angleInDegrees);
+    const topRightPoint = computePointPosition(hourAngle3h - angleInDegrees);
+    const bottomRightPoint = computePointPosition(hourAngle3h + angleInDegrees);
+    const bottomLeftPoint = computePointPosition(hourAngle9h - angleInDegrees);
 
     return [
       topLeftPoint,
