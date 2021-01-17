@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import ISourceRectangle from 'src/models/ISourceRectangle';
 import Rectangle from 'src/models/Rectangle';
+import { INVALID_JSON_ERROR_TEXT, NO_FILE_ERROR_TEXT } from 'src/utils/config';
 import { showError } from 'src/utils/helpers';
 import styles from './RectanglesLoader.module.css';
 
@@ -31,8 +32,7 @@ function onReaderLoad(
     }
     sourceRectangles = JSON.parse(event.target.result as string);
   } catch {
-    const invalidJsonErrorText = 'Invalid JSON! Check the JSON format';
-    handleError(invalidJsonErrorText);
+    handleError(INVALID_JSON_ERROR_TEXT);
   }
 
   try {
@@ -50,9 +50,8 @@ function readFile(
   const reader = new FileReader();
   reader.onload = (e) => onReaderLoad(e, events);
   if (!event.target?.files?.length) {
-    const noFileErrorText = 'You should to choose one correct JSON file';
-    showError(noFileErrorText);
-    events.onError(noFileErrorText);
+    showError(NO_FILE_ERROR_TEXT);
+    events.onError(NO_FILE_ERROR_TEXT);
     return;
   }
   reader.readAsText(event.target.files[0]);

@@ -8,6 +8,10 @@ import {
   MAP_FILL_LAYER_ID,
   MAP_COLLISION_LAYER_ID,
   HAS_COLLISION_PROPERTY_NAME,
+  COLLISION_LINE_COLOR,
+  COLLISION_LINE_STYLES,
+  MAPBOX_ERROR_TEXT,
+  MAPBOX_MAP_STYLE,
 } from 'src/utils/config';
 import {
   findCollisionsAndRemember,
@@ -49,12 +53,10 @@ function drawRectangles(
       'line-color': [
         'case',
         ['boolean', ['has', HAS_COLLISION_PROPERTY_NAME], true],
-        '#f00',
+        COLLISION_LINE_COLOR,
         'transparent',
       ],
-      'line-width': 4,
-      'line-offset': -3,
-      'line-dasharray': [1, 1],
+      ...COLLISION_LINE_STYLES,
     },
   });
 
@@ -96,15 +98,13 @@ function TheMap(): JSX.Element {
       setLoading(true);
       const mapInstance = new mapboxgl.Map({
         container: mapContainerRef?.current ?? '',
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: MAPBOX_MAP_STYLE,
       });
       mapInstance.on('load', () => {
         setMap(mapInstance);
       });
       mapInstance.on('error', () => {
-        showError(
-          'Something wrong happened with the map module, please try to reload this page',
-        );
+        showError(MAPBOX_ERROR_TEXT);
       });
     }
     return () => {
