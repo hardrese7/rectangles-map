@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import ISourceRectangle from 'Models/ISourceRectangle';
+import ISourceRectangle from 'src/models/ISourceRectangle';
 import styles from './LoaderJSON.module.css';
 
 type OnSuccessCallback = (data: ISourceRectangle[]) => void;

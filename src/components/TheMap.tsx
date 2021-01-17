@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import bbox from '@turf/bbox';
-import Rectangle from 'Models/Rectangle';
-import ISourceRectangle from 'Models/ISourceRectangle';
+import Rectangle from 'src/models/Rectangle';
+import ISourceRectangle from 'src/models/ISourceRectangle';
 import {
   MAPBOX_KEY,
   MAP_SOURCE_ID,
   MAP_FILL_LAYER_ID,
   MAP_COLLISION_LAYER_ID,
   HAS_COLLISION_PROPERTY_NAME,
-} from 'Utils/config';
+} from 'src/utils/config';
 import {
   findCollisionsAndRemember,
   generateFeatureCollection,
-} from 'Utils/helpers';
+} from 'src/utils/helpers';
 import styles from './TheMap.module.css';
 import LoaderJSON from './LoaderJSON';
 import Spinner from './Spinner';

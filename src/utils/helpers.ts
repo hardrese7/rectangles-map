@@ -1,5 +1,5 @@
 import intersect from '@turf/intersect';
-import Rectangle from 'Models/Rectangle';
+import Rectangle from 'src/models/Rectangle';
 
 export function findCollisionsAndRemember(rectangles: Rectangle[]): void {
   for (let i = 0; i < rectangles.length - 1; i += 1) {

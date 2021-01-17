@@ -1,8 +1,8 @@
 import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
 import transformRotate from '@turf/transform-rotate';
 import { polygon, Position } from '@turf/helpers';
-import { HAS_COLLISION_PROPERTY_NAME } from 'Utils/config';
-import { calculateRightTriangleAngle } from 'Utils/helpers';
+import { HAS_COLLISION_PROPERTY_NAME } from 'src/utils/config';
+import { calculateRightTriangleAngle } from 'src/utils/helpers';
 import ISourceRectangle from './ISourceRectangle';
 
 export default class Rectangle {
