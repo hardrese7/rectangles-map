@@ -12,6 +12,7 @@ import {
 import {
   findCollisionsAndRemember,
   generateFeatureCollection,
+  showError,
 } from 'src/utils/helpers';
 import styles from './TheMap.module.css';
 import RectanglesLoader from './RectanglesLoader';
@@ -101,8 +102,7 @@ function TheMap(): JSX.Element {
         setMap(mapInstance);
       });
       mapInstance.on('error', () => {
-        // eslint-disable-next-line no-alert
-        alert(
+        showError(
           'Something wrong happened with the map module, please try to reload this page',
         );
       });

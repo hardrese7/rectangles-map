@@ -36,3 +36,8 @@ export function calculateRightTriangleAngle(
 ): number {
   return (Math.atan(opposite / adjacent) * 180) / Math.PI;
 }
+
+export function showError(text: string): void {
+  // eslint-disable-next-line no-alert
+  alert(text);
+}

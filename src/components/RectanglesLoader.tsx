@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import ISourceRectangle from 'src/models/ISourceRectangle';
 import Rectangle from 'src/models/Rectangle';
+import { showError } from 'src/utils/helpers';
 import styles from './RectanglesLoader.module.css';
 
 type OnSuccessCallback = (data: Rectangle[]) => void;
@@ -22,8 +23,7 @@ function onReaderLoad(
   let sourceRectangles: ISourceRectangle[] = [];
   const handleError = (message: string) => {
     events.onError(message);
-    // eslint-disable-next-line no-alert
-    alert(message);
+    showError(message);
   };
   try {
     if (!event.target?.result) {
@@ -51,8 +51,7 @@ function readFile(
   reader.onload = (e) => onReaderLoad(e, events);
   if (!event.target?.files?.length) {
     const noFileErrorText = 'You should to choose one correct JSON file';
-    // eslint-disable-next-line no-alert
-    alert(noFileErrorText);
+    showError(noFileErrorText);
     events.onError(noFileErrorText);
     return;
   }
