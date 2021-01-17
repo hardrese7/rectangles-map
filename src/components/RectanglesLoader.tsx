@@ -1,42 +1,51 @@
 import React, { useRef } from 'react';
 import ISourceRectangle from 'src/models/ISourceRectangle';
-import styles from './LoaderJSON.module.css';
+import Rectangle from 'src/models/Rectangle';
+import styles from './RectanglesLoader.module.css';
 
-type OnSuccessCallback = (data: ISourceRectangle[]) => void;
+type OnSuccessCallback = (data: Rectangle[]) => void;
 
-interface ILoaderJSONEvents {
+interface IRectanglesLoaderEvents {
   onSuccess: OnSuccessCallback;
-  onError: (error: string) => void;
+  onError: (message: string) => void;
   onLoadingStart: () => void;
 }
 
-interface ILoaderJSONProps extends ILoaderJSONEvents {
+interface IRectanglesLoaderProps extends IRectanglesLoaderEvents {
   disabled: boolean;
 }
 
 function onReaderLoad(
   event: ProgressEvent<FileReader>,
-  events: ILoaderJSONEvents,
+  events: IRectanglesLoaderEvents,
 ) {
+  let sourceRectangles: ISourceRectangle[] = [];
+  const handleError = (message: string) => {
+    events.onError(message);
+    // eslint-disable-next-line no-alert
+    alert(message);
+  };
   try {
     if (!event.target?.result) {
-      throw new Error('Invalid JSON');
+      throw new Error();
     }
-    const rectangles = JSON.parse(event.target.result as string);
-    // TODO check rectangles' array has the correct shape
-    events.onSuccess(rectangles);
+    sourceRectangles = JSON.parse(event.target.result as string);
   } catch {
     const invalidJsonErrorText = 'Invalid JSON! Check the JSON format';
-    // TODO implement the error handler
-    // eslint-disable-next-line no-alert
-    alert(invalidJsonErrorText);
-    events.onError(invalidJsonErrorText);
+    handleError(invalidJsonErrorText);
+  }
+
+  try {
+    const rectangles = sourceRectangles.map((sr) => new Rectangle(sr));
+    events.onSuccess(rectangles);
+  } catch (error) {
+    handleError(error.message || error);
   }
 }
 
 function readFile(
   event: React.ChangeEvent<HTMLInputElement>,
-  events: ILoaderJSONEvents,
+  events: IRectanglesLoaderEvents,
 ) {
   const reader = new FileReader();
   reader.onload = (e) => onReaderLoad(e, events);
@@ -50,12 +59,12 @@ function readFile(
   reader.readAsText(event.target.files[0]);
 }
 
-function LoaderJSON({
+function RectanglesLoader({
   onLoadingStart,
   onError,
   onSuccess,
   disabled,
-}: ILoaderJSONProps): JSX.Element {
+}: IRectanglesLoaderProps): JSX.Element {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const readFileAndResetInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,4 +94,4 @@ function LoaderJSON({
   );
 }
 
-export default LoaderJSON;
+export default RectanglesLoader;

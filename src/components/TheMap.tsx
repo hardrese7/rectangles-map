@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import bbox from '@turf/bbox';
 import Rectangle from 'src/models/Rectangle';
-import ISourceRectangle from 'src/models/ISourceRectangle';
 import {
   MAPBOX_KEY,
   MAP_SOURCE_ID,
@@ -15,7 +14,7 @@ import {
   generateFeatureCollection,
 } from 'src/utils/helpers';
 import styles from './TheMap.module.css';
-import LoaderJSON from './LoaderJSON';
+import RectanglesLoader from './RectanglesLoader';
 import Spinner from './Spinner';
 
 /* eslint-disable */
@@ -89,9 +88,6 @@ function TheMap(): JSX.Element {
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
   const [loading, setLoading] = useState(true);
   const mapContainerRef = useRef(null);
-  const updateRectangles = (newRectangles: ISourceRectangle[]) => {
-    setRectangles(newRectangles.map((r) => new Rectangle(r)));
-  };
 
   // Init the map instance
   useEffect(() => {
@@ -104,10 +100,11 @@ function TheMap(): JSX.Element {
       mapInstance.on('load', () => {
         setMap(mapInstance);
       });
-      mapInstance.on('error', (error) => {
-        // TODO handle error
-        // eslint-disable-next-line no-console
-        console.warn(error);
+      mapInstance.on('error', () => {
+        // eslint-disable-next-line no-alert
+        alert(
+          'Something wrong happened with the map module, please try to reload this page',
+        );
       });
     }
     return () => {
@@ -146,9 +143,9 @@ function TheMap(): JSX.Element {
   return (
     <div>
       <div ref={mapContainerRef} className={styles.mapContainer} />
-      <LoaderJSON
+      <RectanglesLoader
         disabled={loading}
-        onSuccess={updateRectangles}
+        onSuccess={setRectangles}
         onError={() => setLoading(false)}
         onLoadingStart={() => setLoading(true)}
       />
