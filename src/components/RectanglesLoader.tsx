@@ -5,10 +5,8 @@ import { INVALID_JSON_ERROR_TEXT, NO_FILE_ERROR_TEXT } from 'src/utils/config';
 import { showError } from 'src/utils/helpers';
 import styles from './RectanglesLoader.module.css';
 
-type OnSuccessCallback = (data: Rectangle[]) => void;
-
 interface IRectanglesLoaderEvents {
-  onSuccess: OnSuccessCallback;
+  onSuccess: (data: Rectangle[]) => void;
   onError: (message: string) => void;
   onLoadingStart: () => void;
 }
