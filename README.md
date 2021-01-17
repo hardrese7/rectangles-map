@@ -10,6 +10,8 @@
 ## Demo
 The last app version from master is always deployed [here](https://rectangles-map.netlify.app/).
 
+![](rectangles-map-demo.gif)
+
 
 # Getting Started with Create React App
 
