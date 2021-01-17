@@ -10,7 +10,7 @@ import {
 import ISourceRectangle from './ISourceRectangle';
 
 export default class Rectangle {
-  readonly sourceData: ISourceRectangle;
+  private readonly sourceData: ISourceRectangle;
 
   readonly geoJSON: GeoJSON.Feature<GeoJSON.Polygon, GeoJSON.GeoJsonProperties>;
 
@@ -30,12 +30,12 @@ export default class Rectangle {
    */
   private validateShapeOfSourceDate(): boolean {
     const obj = this.sourceData;
-    validateObjectPropertyIsNumber(obj.center_lat, 'center_lat', -90, 90);
-    validateObjectPropertyIsNumber(obj.center_lng, 'center_lng', -180, 180);
-    validateObjectPropertyIsNumber(obj.length, 'length', 1, 100);
-    validateObjectPropertyIsNumber(obj.width, 'width', 1, 100);
-    validateObjectPropertyIsNumber(obj.yaw_angle, 'yaw_angle', -360, 360);
-    validateObjectPropertyIsColor(obj.color, 'color');
+    validateObjectPropertyIsNumber(obj, 'center_lat', -90, 90);
+    validateObjectPropertyIsNumber(obj, 'center_lng', -180, 180);
+    validateObjectPropertyIsNumber(obj, 'length', 1, 100);
+    validateObjectPropertyIsNumber(obj, 'width', 1, 100);
+    validateObjectPropertyIsNumber(obj, 'yaw_angle', -360, 360);
+    validateObjectPropertyIsColor(obj, 'color');
     return true;
   }
 

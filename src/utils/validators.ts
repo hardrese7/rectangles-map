@@ -1,9 +1,10 @@
-export function validateObjectPropertyIsNumber(
-  num: number | unknown,
-  propertyName: string,
+export function validateObjectPropertyIsNumber<T>(
+  obj: T,
+  propertyName: keyof T,
   min: number | null = null,
   max: number | null = null,
 ): boolean {
+  const num = obj[propertyName];
   if (typeof num !== 'number') {
     throw Error(`${propertyName} must be of type number but was ${typeof num}`);
   }
@@ -20,10 +21,11 @@ export function validateObjectPropertyIsNumber(
   return true;
 }
 
-export function validateObjectPropertyIsColor(
-  color: string | unknown,
-  propertyName: string,
+export function validateObjectPropertyIsColor<T>(
+  obj: T,
+  propertyName: keyof T,
 ): boolean {
+  const color = obj[propertyName];
   if (typeof color !== 'string') {
     throw Error(
       `${propertyName} must be of type number but was ${typeof color}`,
