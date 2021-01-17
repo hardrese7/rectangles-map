@@ -18,6 +18,14 @@ import styles from './TheMap.module.css';
 import LoaderJSON from './LoaderJSON';
 import Spinner from './Spinner';
 
+/* eslint-disable */
+// IMPORTANT: we need this workaround to fix the build
+// more details here: https://github.com/mapbox/mapbox-gl-js/issues/10173#issuecomment-750489778
+// TODO when there will be some better solution, remove this workaround
+// @ts-ignore
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+/* eslint-enable */
+
 mapboxgl.accessToken = MAPBOX_KEY;
 
 function drawRectangles(
