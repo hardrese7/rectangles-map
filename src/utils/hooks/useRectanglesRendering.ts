@@ -1,9 +1,9 @@
 import mapboxgl from 'mapbox-gl';
 import { useEffect, useMemo, useState } from 'react';
-import RectanglesTransformer from 'src/models/RectanglesTransformer';
-import RectangleGeoJSON from 'src/models/RectangleGeoJSON';
 import bbox from '@turf/bbox';
-import Rectangle from 'src/models/Rectangle';
+import RectanglesTransformer from 'src/models/rectangle/RectanglesTransformer';
+import RectangleGeoJSON from 'src/models/rectangle/RectangleGeoJSON';
+import Rectangle from 'src/models/rectangle/Rectangle';
 import {
   COLLISION_LINE_COLOR,
   COLLISION_LINE_STYLES,

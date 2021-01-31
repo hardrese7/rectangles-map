@@ -2,9 +2,9 @@ import { polygon, Position } from '@turf/helpers';
 import transformRotate from '@turf/transform-rotate';
 import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
 import { calculateRightTriangleAngle } from 'src/utils/helpers';
+import ShapesTransformer from 'src/models/shape/ShapesTransformer';
 import IRectangleDimesions from './IRectangleDimesions';
-import ISourceRectangle from './ISourceRectangle';
-import ShapesTransformer from './ShapesTransformer';
+import IRectangleSource from './IRectangleSource';
 
 export default class RectanglesTransformer extends ShapesTransformer {
   /**
@@ -61,15 +61,15 @@ export default class RectanglesTransformer extends ShapesTransformer {
   }
 
   static sourceToGeoJSON(
-    sourceRectangle: ISourceRectangle,
+    rectangleSource: IRectangleSource,
   ): GeoJSON.Feature<GeoJSON.Polygon, GeoJSON.GeoJsonProperties> {
     const geoJSON = RectanglesTransformer.getRotatedRectangle(
-      RectanglesTransformer.calculateRectangleCoordinates(sourceRectangle),
-      sourceRectangle.center_lng,
-      sourceRectangle.center_lat,
-      sourceRectangle.yaw_angle,
+      RectanglesTransformer.calculateRectangleCoordinates(rectangleSource),
+      rectangleSource.center_lng,
+      rectangleSource.center_lat,
+      rectangleSource.yaw_angle,
     );
-    geoJSON.properties = { color: sourceRectangle.color };
+    geoJSON.properties = { color: rectangleSource.color };
     return geoJSON;
   }
 }

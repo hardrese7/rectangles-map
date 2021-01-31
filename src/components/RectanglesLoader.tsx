@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import ISourceRectangle from 'src/models/ISourceRectangle';
-import Rectangle from 'src/models/Rectangle';
+import IRectangleSource from 'src/models/rectangle/IRectangleSource';
+import Rectangle from 'src/models/rectangle/Rectangle';
 import { INVALID_JSON_ERROR_TEXT, NO_FILE_ERROR_TEXT } from 'src/utils/config';
 import { showError } from 'src/utils/helpers';
 import styles from './RectanglesLoader.module.css';
@@ -19,7 +19,7 @@ function onReaderLoad(
   event: ProgressEvent<FileReader>,
   events: IRectanglesLoaderEvents,
 ) {
-  let sourceRectangles: ISourceRectangle[] = [];
+  let rectanglesSources: IRectangleSource[] = [];
   const handleError = (message: string) => {
     events.onError(message);
     showError(message);
@@ -28,13 +28,13 @@ function onReaderLoad(
     if (!event.target?.result) {
       throw new Error();
     }
-    sourceRectangles = JSON.parse(event.target.result as string);
+    rectanglesSources = JSON.parse(event.target.result as string);
   } catch {
     handleError(INVALID_JSON_ERROR_TEXT);
   }
 
   try {
-    const rectangles = sourceRectangles.map((sr) => new Rectangle(sr));
+    const rectangles = rectanglesSources.map((rs) => new Rectangle(rs));
     events.onSuccess(rectangles);
   } catch (error) {
     handleError(error.message || error);

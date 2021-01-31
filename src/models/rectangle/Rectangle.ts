@@ -14,10 +14,10 @@ import {
   validateObjectPropertyIsColor,
   validateObjectPropertyIsNumber,
 } from 'src/utils/validators';
-import ISourceRectangle from './ISourceRectangle';
-import Shape from './Shape';
+import Shape from 'src/models/shape/Shape';
+import IRectangleSource from './IRectangleSource';
 
-export default class Rectangle extends Shape<ISourceRectangle> {
+export default class Rectangle extends Shape<IRectangleSource> {
   // TODO May be in the future we'll need to replace it to
   // some library like https://www.npmjs.com/package/json2typescript
   /**

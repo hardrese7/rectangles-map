@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import mapboxgl from 'mapbox-gl';
-import Rectangle from 'src/models/Rectangle';
+import Rectangle from 'src/models/rectangle/Rectangle';
 import { MAPBOX_KEY } from 'src/utils/config';
 import useMap from 'src/utils/hooks/useMap';
 import useRectanglesRendering from 'src/utils/hooks/useRectanglesRendering';
