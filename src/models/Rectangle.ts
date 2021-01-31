@@ -28,7 +28,7 @@ export default class Rectangle {
 
   constructor(rectangle: ISourceRectangle) {
     this.sourceData = rectangle;
-    this.validateShapeOfSourceDate();
+    this.validateShapeOfSourceData();
     this.geoJSON = this.getRotatedRectangle(
       this.calculateRectangleCoordinates(),
     );
@@ -40,7 +40,7 @@ export default class Rectangle {
   /**
    * Throws an error if the shape is incorrect, otherwise returns true
    */
-  private validateShapeOfSourceDate(): boolean {
+  private validateShapeOfSourceData(): boolean {
     const obj = this.sourceData;
     validateObjectPropertyIsNumber(
       obj,
