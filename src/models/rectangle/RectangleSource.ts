@@ -1,6 +1,6 @@
-import RectangleDimesions from './RectangleDimesions';
+import RectangleDimensions from './RectangleDimensions';
 
-export default interface RectangleSource extends RectangleDimesions {
+export default interface RectangleSource extends RectangleDimensions {
   yaw_angle: number;
   color: string;
 }
