@@ -10,51 +10,23 @@ import {
   MIN_RECTANGLE_WIDTH,
   MIN_YAW_ANGLE,
 } from 'src/utils/config';
-import {
-  validateObjectPropertyIsColor,
-  validateObjectPropertyIsNumber,
-} from 'src/utils/validators';
+import { propMustBeColor, propMustBeNumber } from 'src/utils/validators';
 import Shape from 'src/models/shape/Shape';
 import IRectangleSource from './IRectangleSource';
 
 export default class Rectangle extends Shape<IRectangleSource> {
-  // TODO May be in the future we'll need to replace it to
-  // some library like https://www.npmjs.com/package/json2typescript
-  /**
-   * Throws an error if the shape is incorrect, otherwise returns true
-   */
-  validateShapeOfData(): boolean {
-    validateObjectPropertyIsNumber(
-      this.data,
-      'center_lat',
-      MIN_LATITUDE,
-      MAX_LATITUDE,
-    );
-    validateObjectPropertyIsNumber(
-      this.data,
-      'center_lng',
-      MIN_LONGTITUDE,
-      MAX_LONGTITUDE,
-    );
-    validateObjectPropertyIsNumber(
-      this.data,
+  constructor(data: IRectangleSource) {
+    propMustBeNumber(data, 'center_lat', MIN_LATITUDE, MAX_LATITUDE);
+    propMustBeNumber(data, 'center_lng', MIN_LONGTITUDE, MAX_LONGTITUDE);
+    propMustBeNumber(
+      data,
       'length',
       MIN_RECTANGLE_LENGTH,
       MAX_RECTANGLE_LENGTH,
     );
-    validateObjectPropertyIsNumber(
-      this.data,
-      'width',
-      MIN_RECTANGLE_WIDTH,
-      MAX_RECTANGLE_WIDTH,
-    );
-    validateObjectPropertyIsNumber(
-      this.data,
-      'yaw_angle',
-      MIN_YAW_ANGLE,
-      MAX_YAW_ANGLE,
-    );
-    validateObjectPropertyIsColor(this.data, 'color');
-    return true;
+    propMustBeNumber(data, 'width', MIN_RECTANGLE_WIDTH, MAX_RECTANGLE_WIDTH);
+    propMustBeNumber(data, 'yaw_angle', MIN_YAW_ANGLE, MAX_YAW_ANGLE);
+    propMustBeColor(data, 'color');
+    super(data);
   }
 }

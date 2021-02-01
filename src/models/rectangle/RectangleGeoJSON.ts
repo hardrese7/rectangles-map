@@ -1,11 +1,14 @@
-import RectanglesTransformer from 'src/models/rectangle/RectanglesTransformer';
 import ShapeGeoJSON from 'src/models/shape/ShapeGeoJSON';
+import {
+  calculateRectangleCoordinates,
+  getRotatedRectangle,
+} from 'src/utils/rectanglesTransformers';
 import IRectangleSource from './IRectangleSource';
 
 export default class RectangleGeoJSON extends ShapeGeoJSON {
   constructor(rectangleSource: IRectangleSource) {
-    const data = RectanglesTransformer.getRotatedRectangle(
-      RectanglesTransformer.calculateRectangleCoordinates(rectangleSource),
+    const data = getRotatedRectangle(
+      calculateRectangleCoordinates(rectangleSource),
       rectangleSource.center_lng,
       rectangleSource.center_lat,
       rectangleSource.yaw_angle,

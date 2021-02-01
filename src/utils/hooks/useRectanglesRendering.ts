@@ -1,7 +1,6 @@
 import mapboxgl from 'mapbox-gl';
 import { useEffect, useMemo, useState } from 'react';
 import bbox from '@turf/bbox';
-import RectanglesTransformer from 'src/models/rectangle/RectanglesTransformer';
 import RectangleGeoJSON from 'src/models/rectangle/RectangleGeoJSON';
 import Rectangle from 'src/models/rectangle/Rectangle';
 import {
@@ -11,7 +10,11 @@ import {
   MAP_COLLISION_LAYER_ID,
   MAP_FILL_LAYER_ID,
   MAP_SOURCE_ID,
-} from '../config';
+} from 'src/utils/config';
+import {
+  findAndRememberCollisions,
+  generateFeatureCollection,
+} from 'src/utils/shapeTransformers';
 
 function drawRectangles(
   map: mapboxgl.Map,
@@ -81,8 +84,8 @@ export default function useRectanglesRendering(
     const rectanglesGeoJSON = rectangles.map(
       (r) => new RectangleGeoJSON(r.data),
     );
-    RectanglesTransformer.findAndRememberCollisions(rectanglesGeoJSON);
-    return RectanglesTransformer.generateFeatureCollection(rectanglesGeoJSON);
+    findAndRememberCollisions(rectanglesGeoJSON);
+    return generateFeatureCollection(rectanglesGeoJSON);
   }, [rectangles]);
 
   // Render the rectangles and adjust zoom

@@ -1,9 +1,9 @@
-export function validateObjectPropertyIsNumber<T>(
+export function propMustBeNumber<T>(
   obj: T,
   propertyName: keyof T,
   min: number | null = null,
   max: number | null = null,
-): boolean {
+): void {
   const num = obj[propertyName];
   if (typeof num !== 'number') {
     throw TypeError(
@@ -20,13 +20,9 @@ export function validateObjectPropertyIsNumber<T>(
       `${propertyName} must be less or equal to ${min} but was ${num}`,
     );
   }
-  return true;
 }
 
-export function validateObjectPropertyIsColor<T>(
-  obj: T,
-  propertyName: keyof T,
-): boolean {
+export function propMustBeColor<T>(obj: T, propertyName: keyof T): void {
   const color = obj[propertyName];
   if (typeof color !== 'string') {
     throw TypeError(
@@ -39,5 +35,4 @@ export function validateObjectPropertyIsColor<T>(
       `${propertyName} must be correct hex(length = 3 or 6) with leading # but was ${color}`,
     );
   }
-  return true;
 }
