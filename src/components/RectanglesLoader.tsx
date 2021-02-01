@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import IRectangleSource from 'src/models/rectangle/IRectangleSource';
+import RectangleSource from 'src/models/rectangle/RectangleSource';
 import Rectangle from 'src/models/rectangle/Rectangle';
 import { INVALID_JSON_ERROR_TEXT, NO_FILE_ERROR_TEXT } from 'src/utils/config';
 import { showError } from 'src/utils/helpers';
@@ -19,7 +19,7 @@ function onReaderLoad(
   event: ProgressEvent<FileReader>,
   events: IRectanglesLoaderEvents,
 ) {
-  let rectanglesSources: IRectangleSource[] = [];
+  let rectanglesSources: RectangleSource[] = [];
   const handleError = (message: string) => {
     events.onError(message);
     showError(message);

@@ -2,7 +2,7 @@ import { polygon, Position } from '@turf/helpers';
 import transformRotate from '@turf/transform-rotate';
 import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
 import { calculateRightTriangleAngle } from 'src/utils/helpers';
-import IRectangleDimesions from 'src/models/rectangle/IRectangleDimesions';
+import RectangleDimesions from 'src/models/rectangle/RectangleDimesions';
 
 /**
  * It's necessary to calculate coordinates because Mapbox
@@ -11,7 +11,7 @@ import IRectangleDimesions from 'src/models/rectangle/IRectangleDimesions';
  * (top-left, top-right, bottom-right, bottom-left, top-left)
  */
 export function calculateRectangleCoordinates(
-  data: IRectangleDimesions,
+  data: RectangleDimesions,
 ): Position[] {
   const halfLength = data.length / 2;
   const halfWidth = data.width / 2;

@@ -12,10 +12,10 @@ import {
 } from 'src/utils/config';
 import { propMustBeColor, propMustBeNumber } from 'src/utils/validators';
 import Shape from 'src/models/shape/Shape';
-import IRectangleSource from './IRectangleSource';
+import RectangleSource from './RectangleSource';
 
-export default class Rectangle extends Shape<IRectangleSource> {
-  constructor(data: IRectangleSource) {
+export default class Rectangle extends Shape<RectangleSource> {
+  constructor(data: RectangleSource) {
     propMustBeNumber(data, 'center_lat', MIN_LATITUDE, MAX_LATITUDE);
     propMustBeNumber(data, 'center_lng', MIN_LONGTITUDE, MAX_LONGTITUDE);
     propMustBeNumber(
