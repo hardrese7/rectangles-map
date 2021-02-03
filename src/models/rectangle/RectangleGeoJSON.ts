@@ -2,18 +2,25 @@ import ShapeGeoJSON from 'src/models/shape/ShapeGeoJSON';
 import {
   calculateRectangleCoordinates,
   getRotatedRectangle,
-} from 'src/utils/rectanglesTransformers';
-import RectangleSource from './RectangleSource';
+} from 'src/utils/geometry';
+import Rectangle from './Rectangle';
 
 export default class RectangleGeoJSON extends ShapeGeoJSON {
-  constructor(rectangleSource: RectangleSource) {
+  constructor({
+    center_lng,
+    center_lat,
+    length,
+    width,
+    yaw_angle,
+    color,
+  }: Rectangle) {
     const data = getRotatedRectangle(
-      calculateRectangleCoordinates(rectangleSource),
-      rectangleSource.center_lng,
-      rectangleSource.center_lat,
-      rectangleSource.yaw_angle,
+      calculateRectangleCoordinates(center_lat, center_lng, length, width),
+      center_lng,
+      center_lat,
+      yaw_angle,
     );
-    data.properties = { color: rectangleSource.color };
+    data.properties = { color };
     super(data);
   }
 }

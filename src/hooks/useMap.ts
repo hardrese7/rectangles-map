@@ -1,7 +1,7 @@
 import mapboxgl from 'mapbox-gl';
 import { useEffect, useRef, useState } from 'react';
-import { MAPBOX_ERROR_TEXT, MAPBOX_MAP_STYLE } from '../config';
-import { showError } from '../helpers';
+import { MAPBOX_ERROR_TEXT, MAPBOX_MAP_STYLE } from 'src/config';
+import showError from 'src/utils/showError';
 
 /**
  * Initializes the map.

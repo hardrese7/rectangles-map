@@ -1,8 +1,10 @@
 import mapboxgl from 'mapbox-gl';
 import { useEffect, useMemo, useState } from 'react';
 import bbox from '@turf/bbox';
+import intersect from '@turf/intersect';
 import RectangleGeoJSON from 'src/models/rectangle/RectangleGeoJSON';
 import Rectangle from 'src/models/rectangle/Rectangle';
+import ShapeGeoJSON from 'src/models/shape/ShapeGeoJSON';
 import {
   COLLISION_LINE_COLOR,
   COLLISION_LINE_STYLES,
@@ -10,11 +12,28 @@ import {
   MAP_COLLISION_LAYER_ID,
   MAP_FILL_LAYER_ID,
   MAP_SOURCE_ID,
-} from 'src/utils/config';
-import {
-  findAndRememberCollisions,
-  generateFeatureCollection,
-} from 'src/utils/shapeTransformers';
+} from 'src/config';
+
+export function findAndRememberCollisions(shapes: ShapeGeoJSON[]): void {
+  for (let i = 0; i < shapes.length - 1; i += 1) {
+    for (let j = i + 1; j < shapes.length; j += 1) {
+      const hasCollision = !!intersect(shapes[i].data, shapes[j].data);
+      if (hasCollision) {
+        shapes[i].setCollision(true);
+        shapes[j].setCollision(true);
+      }
+    }
+  }
+}
+
+export function generateFeatureCollection(
+  shapes: ShapeGeoJSON[],
+): GeoJSON.FeatureCollection {
+  return {
+    type: 'FeatureCollection',
+    features: shapes.map((s) => s.data),
+  };
+}
 
 function drawRectangles(
   map: mapboxgl.Map,
@@ -81,9 +100,7 @@ export default function useRectanglesRendering(
 
   // Generate the feature collection for next rendering
   const featureCollection = useMemo(() => {
-    const rectanglesGeoJSON = rectangles.map(
-      (r) => new RectangleGeoJSON(r.data),
-    );
+    const rectanglesGeoJSON = rectangles.map((r) => new RectangleGeoJSON(r));
     findAndRememberCollisions(rectanglesGeoJSON);
     return generateFeatureCollection(rectanglesGeoJSON);
   }, [rectangles]);

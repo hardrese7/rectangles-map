@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import mapboxgl from 'mapbox-gl';
 import Rectangle from 'src/models/rectangle/Rectangle';
-import { MAPBOX_KEY } from 'src/utils/config';
-import useMap from 'src/utils/hooks/useMap';
-import useRectanglesRendering from 'src/utils/hooks/useRectanglesRendering';
+import { MAPBOX_KEY } from 'src/config';
+import useMap from 'src/hooks/useMap';
+import useRectanglesRendering from 'src/hooks/useRectanglesRendering';
 import styles from './TheMap.module.css';
 import RectanglesLoader from './RectanglesLoader';
 import Spinner from './Spinner';

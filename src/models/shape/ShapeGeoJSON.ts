@@ -1,4 +1,4 @@
-import { HAS_COLLISION_PROPERTY_NAME } from 'src/utils/config';
+import { HAS_COLLISION_PROPERTY_NAME } from 'src/config';
 
 export default abstract class ShapeGeoJSON {
   constructor(

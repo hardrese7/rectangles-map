@@ -1,8 +1,18 @@
 import { polygon, Position } from '@turf/helpers';
 import transformRotate from '@turf/transform-rotate';
 import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
-import { calculateRightTriangleAngle } from 'src/utils/helpers';
-import RectangleDimensions from 'src/models/rectangle/RectangleDimensions';
+
+/**
+ * Returns the angle in degrees between the opposite and adjacent sides
+ * @param opposite The opposite side length
+ * @param adjacent The adjacent side length
+ */
+export function calculateRightTriangleAngle(
+  opposite: number,
+  adjacent: number,
+): number {
+  return (Math.atan(opposite / adjacent) * 180) / Math.PI;
+}
 
 /**
  * It's necessary to calculate coordinates because Mapbox
@@ -11,15 +21,18 @@ import RectangleDimensions from 'src/models/rectangle/RectangleDimensions';
  * (top-left, top-right, bottom-right, bottom-left, top-left)
  */
 export function calculateRectangleCoordinates(
-  data: RectangleDimensions,
+  center_lat: number,
+  center_lng: number,
+  length: number,
+  width: number,
 ): Position[] {
-  const halfLength = data.length / 2;
-  const halfWidth = data.width / 2;
+  const halfLength = length / 2;
+  const halfWidth = width / 2;
   const angleInDegrees = calculateRightTriangleAngle(halfWidth, halfLength);
   const distanceFromCenterToAngle = Math.hypot(halfWidth, halfLength);
   const rectCenter = {
-    latitude: data.center_lat,
-    longitude: data.center_lng,
+    latitude: center_lat,
+    longitude: center_lng,
   };
 
   const computePointPosition = (angle: number): Position => {
