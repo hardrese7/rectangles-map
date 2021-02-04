@@ -1,43 +1,27 @@
-export function validateObjectPropertyIsNumber<T>(
-  obj: T,
-  propertyName: keyof T,
+export function mustBeNumber(
+  value: unknown,
   min: number | null = null,
   max: number | null = null,
-): boolean {
-  const num = obj[propertyName];
-  if (typeof num !== 'number') {
-    throw TypeError(
-      `${propertyName} must be of type number but was ${typeof num}`,
-    );
+): void {
+  if (typeof value !== 'number') {
+    throw TypeError(`must be of type number but was ${typeof value}`);
   }
-  if (max && num > max) {
-    throw RangeError(
-      `${propertyName} must be less or equal to ${max} but was ${num}`,
-    );
+  if (max && value > max) {
+    throw RangeError(`must be less or equal to ${max} but was ${value}`);
   }
-  if (min && num < min) {
-    throw RangeError(
-      `${propertyName} must be less or equal to ${min} but was ${num}`,
-    );
+  if (min && value < min) {
+    throw RangeError(`must be less or equal to ${min} but was ${value}`);
   }
-  return true;
 }
 
-export function validateObjectPropertyIsColor<T>(
-  obj: T,
-  propertyName: keyof T,
-): boolean {
-  const color = obj[propertyName];
-  if (typeof color !== 'string') {
-    throw TypeError(
-      `${propertyName} must be of type number but was ${typeof color}`,
-    );
+export function mustBeHexColor(value: unknown): void {
+  if (typeof value !== 'string') {
+    throw TypeError(`must be of type string but was ${typeof value}`);
   }
   const hexRegexp = /^#([0-9A-F]{3}){1,2}$/i;
-  if (!hexRegexp.test(color)) {
+  if (!hexRegexp.test(value)) {
     throw Error(
-      `${propertyName} must be correct hex(length = 3 or 6) with leading # but was ${color}`,
+      `must be correct hex(length = 3 or 6) with leading # but was ${value}`,
     );
   }
-  return true;
 }
