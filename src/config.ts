@@ -26,7 +26,7 @@ export const COLLISION_LINE_STYLES = {
   'line-dasharray': [1, 1],
 };
 
+export const EMPTY_FILE_ERROR_TEXT = 'The provided file is empty';
 export const NO_FILE_ERROR_TEXT = 'You should to choose one correct JSON file';
-export const INVALID_JSON_ERROR_TEXT = 'Invalid JSON! Check the JSON format';
 export const MAPBOX_ERROR_TEXT =
   'Something wrong happened with the map module, please try to reload this page';

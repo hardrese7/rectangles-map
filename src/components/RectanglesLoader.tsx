@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import Rectangle from 'src/models/rectangle/Rectangle';
-import { INVALID_JSON_ERROR_TEXT, NO_FILE_ERROR_TEXT } from 'src/config';
+import { NO_FILE_ERROR_TEXT, EMPTY_FILE_ERROR_TEXT } from 'src/config';
 import showError from 'src/utils/showError';
+import readTextFileAsync from 'src/utils/promiseTextFileReader';
 import styles from './RectanglesLoader.module.css';
 
 type OnSuccessCallback = (data: Rectangle[]) => void;
@@ -15,53 +16,31 @@ interface RectangleSource {
   width: number;
 }
 
-function loadRectangles(
-  event: ProgressEvent<FileReader>,
-  onSuccess: OnSuccessCallback,
-  onError: OnErrorCallback,
-) {
-  const handleError = (message: string) => {
-    onError(message);
-    showError(message);
-  };
-  try {
-    if (!event.target?.result) {
-      throw new Error();
-    }
-    const rectangles = JSON.parse(event.target.result as string).map(
-      (r: RectangleSource) =>
-        new Rectangle(
-          r.yaw_angle,
-          r.color,
-          r.center_lat,
-          r.center_lng,
-          r.length,
-          r.width,
-        ),
-    );
-    onSuccess(rectangles);
-  } catch {
-    // TODO handle typeerrors
-    // handleError(error.message || error);
-    handleError(INVALID_JSON_ERROR_TEXT);
+function parseRectangles(result: string) {
+  if (!result) {
+    throw new Error(EMPTY_FILE_ERROR_TEXT);
   }
+  return JSON.parse(result).map(
+    (r: RectangleSource) =>
+      new Rectangle(
+        r.yaw_angle,
+        r.color,
+        r.center_lat,
+        r.center_lng,
+        r.length,
+        r.width,
+      ),
+  );
 }
 
-function readFile(
+async function readRectangles(
   event: React.ChangeEvent<HTMLInputElement>,
-  onSuccess: OnSuccessCallback,
-  onError: OnErrorCallback,
-) {
-  const reader = new FileReader();
-  reader.onload = (e) => loadRectangles(e, onSuccess, onError);
-  // todo check onloadend
-  // todo check onerror
+): Promise<Rectangle[]> {
   if (!event.target?.files?.length) {
-    showError(NO_FILE_ERROR_TEXT);
-    onError(NO_FILE_ERROR_TEXT);
-    return;
+    throw new Error(NO_FILE_ERROR_TEXT);
   }
-  reader.readAsText(event.target.files[0]);
+  const fileResult = await readTextFileAsync(event.target.files[0]);
+  return parseRectangles(fileResult);
 }
 
 interface RectanglesLoaderProps {
@@ -72,17 +51,24 @@ interface RectanglesLoaderProps {
 }
 
 function RectanglesLoader(props: RectanglesLoaderProps): JSX.Element {
+  const { disabled, onLoadingStart, onSuccess, onError } = props;
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const readFileAndResetInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.onLoadingStart();
-    readFile(e, props.onSuccess, props.onError);
+  const readFileAndResetInput = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    try {
+      onLoadingStart();
+      onSuccess(await readRectangles(e));
+    } catch (error) {
+      onError(error.message);
+      showError(error.message);
+    }
     if (inputFileRef.current) {
       inputFileRef.current.value = '';
     }
   };
 
-  const { disabled } = props;
   const openFileDialog = () => inputFileRef.current?.click();
   return (
     <div className={styles.buttonsContainer}>

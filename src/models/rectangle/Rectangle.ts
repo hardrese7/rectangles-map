@@ -12,6 +12,15 @@ import {
 } from 'src/config';
 import { mustBeHexColor, mustBeNumber } from 'src/utils/validators';
 
+function specifyFieldInException(cb: () => unknown, fieldName: string) {
+  try {
+    cb();
+  } catch (error) {
+    error.message = `${fieldName} ${error.message}`;
+    throw error;
+  }
+}
+
 export default class Rectangle {
   constructor(
     public yaw_angle: number,
@@ -21,11 +30,26 @@ export default class Rectangle {
     public length: number,
     public width: number,
   ) {
-    mustBeNumber(center_lat, MIN_LATITUDE, MAX_LATITUDE);
-    mustBeNumber(center_lng, MIN_LONGTITUDE, MAX_LONGTITUDE);
-    mustBeNumber(length, MIN_RECTANGLE_LENGTH, MAX_RECTANGLE_LENGTH);
-    mustBeNumber(width, MIN_RECTANGLE_WIDTH, MAX_RECTANGLE_WIDTH);
-    mustBeNumber(yaw_angle, MIN_YAW_ANGLE, MAX_YAW_ANGLE);
-    mustBeHexColor(color);
+    specifyFieldInException(
+      () => mustBeNumber(center_lat, MIN_LATITUDE, MAX_LATITUDE),
+      'center_lat',
+    );
+    specifyFieldInException(
+      () => mustBeNumber(center_lng, MIN_LONGTITUDE, MAX_LONGTITUDE),
+      'center_lng',
+    );
+    specifyFieldInException(
+      () => mustBeNumber(length, MIN_RECTANGLE_LENGTH, MAX_RECTANGLE_LENGTH),
+      'length',
+    );
+    specifyFieldInException(
+      () => mustBeNumber(width, MIN_RECTANGLE_WIDTH, MAX_RECTANGLE_WIDTH),
+      'width',
+    );
+    specifyFieldInException(
+      () => mustBeNumber(yaw_angle, MIN_YAW_ANGLE, MAX_YAW_ANGLE),
+      'yaw_angle',
+    );
+    specifyFieldInException(() => mustBeHexColor(color), 'color');
   }
 }

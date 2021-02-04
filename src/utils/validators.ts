@@ -4,13 +4,13 @@ export function mustBeNumber(
   max: number | null = null,
 ): void {
   if (typeof value !== 'number') {
-    throw TypeError(`${value} must be of type number`);
+    throw TypeError(`must be of type number but was ${typeof value}`);
   }
   if (max && value > max) {
-    throw RangeError(`${value} must be less or equal to ${max}`);
+    throw RangeError(`must be less or equal to ${max} but was ${value}`);
   }
   if (min && value < min) {
-    throw RangeError(`${value} $must be less or equal to ${min}`);
+    throw RangeError(`must be less or equal to ${min} but was ${value}`);
   }
 }
 
